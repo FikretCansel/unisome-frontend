@@ -4,19 +4,12 @@ import { db } from "../../firebase";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function SidebarChat({ id, name, addNewChat }) {
+function SidebarChat({ id, name }) {
   const [seed, setSeed] = useState("");
-  const [messages, setMessages] = useState("");
 
   useEffect(() => {
     if (id) {
-      db.collection("matchGroups")
-        .doc(id)
-        .collection("chats")
-        .orderBy("timestamp", "desc")
-        .onSnapshot((snapshot) => {
-          setMessages(snapshot.docs.map((doc) => doc.data()));
-        });
+      
     }
   }, [id]);
 
@@ -24,15 +17,6 @@ function SidebarChat({ id, name, addNewChat }) {
     setSeed(Math.floor(Math.random() * 5000));
   }, []);
 
-  const createChat = () => {
-    const roomName = prompt("Please Enter Name for Chat");
-
-    if (roomName) {
-      db.collection("rooms").add({
-        name: roomName,
-      });
-    }
-  };
 
   return (
       <Link
@@ -47,7 +31,7 @@ function SidebarChat({ id, name, addNewChat }) {
             <p>{name}</p>
             <div class="small">
               <span class="fas fa-circle chat-online"></span>{" "}
-              <p>{messages[0]?.message}</p>
+            
             </div>
           </div>
         </div>

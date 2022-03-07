@@ -12,8 +12,10 @@ import axios from "axios";
 import { db } from "../../firebase";
 import SidebarChat from "./SidebarChat";
 
-function Sidebar({ id, name, addNewChat }) {
-  const [rooms, setRooms] = useState([]);
+function Sidebar() {
+  const [matchRooms, setMatchRooms] = useState([]);
+  const [basicRooms, setBasicRooms] = useState([]);
+
 
   useEffect(() => {
     axios
@@ -22,9 +24,25 @@ function Sidebar({ id, name, addNewChat }) {
       )
       .then((result) => {
         console.log(result.data);
-        setRooms(result.data);
+        setMatchRooms(result.data);
       })
       .catch(() => {});
+
+
+      db.collectionGroup("basicGroups").get()
+      .then((result) => {
+        
+
+        setBasicRooms(result.docs.map((doc) => {
+          return {id:doc.id,...doc.data()};
+        }))
+        // setBasicRooms(result.data);
+      })
+      .catch(() => {});
+
+
+
+
   }, []);
 
   return (
@@ -40,9 +58,15 @@ function Sidebar({ id, name, addNewChat }) {
           </div>
         </div>
       </div>
-      {rooms.map((room) => (
+      Matches Rooms
+      {matchRooms.map((room) => (
         <SidebarChat key={room.id} id={room.id} name={room.name} />
       ))}
+      Basic Rooms
+      {basicRooms.map((room) => (
+        <SidebarChat key={room.id} id={room.id} name={room.name} />
+      ))}
+
     </div>
   );
 }

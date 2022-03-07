@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Chat.css";
-import { useParams } from "react-router-dom";
-import { db } from "../../firebase";
-import firebase from "firebase";
-import axios from "axios";
 import Sidebar from "./Sidebar";
 import Messages from "./Messages";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
-function Chat() {
+
+
+
+
+function Chat(props) {
   return (
     <div>
       <main class="content">
@@ -18,9 +19,9 @@ function Chat() {
           <div class="card">
             <div class="row g-0">
               <Router>
-                <Sidebar />
+                <Sidebar user={props.user}/>
                 <Route path="/chats/rooms/:roomId">
-                  <Messages />
+                  <Messages user={props.user}/>
                 </Route>
               </Router>
             </div>
@@ -31,4 +32,9 @@ function Chat() {
   );
 }
 
-export default Chat;
+function mapStateToProps(state) {
+  return {
+    user: state.userReducer
+  };
+}
+export default connect(mapStateToProps)(Chat);

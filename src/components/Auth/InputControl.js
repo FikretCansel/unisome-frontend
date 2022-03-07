@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../css/InputControl.module.css";
+import styles from "./InputControl.module.css";
 function InputControl(props) {
   return (
     <div className={styles.container}>

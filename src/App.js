@@ -10,12 +10,12 @@ import ProductUpdater from "./components/ProductUpdater";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as userActions from "./redux/actions/userActions";
-import PostAdd from "./components/PostAdd";
-import Sidebar from "./components/Groups/Sidebar";
-import Chat from "./components/Chats/ChatDasboard";
+import PostAdd from "./components/Post/PostAdd";
 import UserProfile from "./components/Profile/UserProfile";
 import Navbar from "./components/navi/Navbar";
 import ChatDasboard from "./components/Chats/ChatDasboard";
+import UpdateDashBoard from "./components/Update/UpdateDashBoard";
+import NotHaveAProfile from "./components/Profile/NotHaveAProfile";
 
 function App(props) {
   function setUser(authUser) {
@@ -37,8 +37,12 @@ function App(props) {
     <Router>
       <Navbar />
       <Switch>
-      <div>
-        <Route path="/postAdd" component={PostAdd} />
+        <Route path="/postAdd">
+          <div  style={{marginTop:"75px"}}>
+            <PostAdd />
+          </div>
+        </Route>
+        <Route path="/settings" component={UpdateDashBoard} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
         <Route path="/checkout">
@@ -48,20 +52,24 @@ function App(props) {
           <Payment />
         </Route>
         <Route path="/update" component={ProductUpdater}></Route>
+        <Route path="/profile/not-found">
+          <div style={{ marginTop: "175px" }}>
+            <NotHaveAProfile />
+          </div>
+        </Route>
         <Route path="/profile/:userId">
-          <UserProfile/>
+          <UserProfile />
         </Route>
 
         <Route path="/chats">
-          <div style={{marginTop:"75px"}}>
-          <ChatDasboard/>
+          <div style={{ marginTop: "75px" }}>
+            <ChatDasboard />
           </div>
         </Route>
 
         <Route exact path="/">
-          <Home/>
+          <Home />
         </Route>
-        </div>
       </Switch>
     </Router>
   );

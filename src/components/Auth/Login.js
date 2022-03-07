@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, } from "react-router-dom";
-import InputControl from "../InputControl"; //../InputControl/InputControl
+import InputControl from "./InputControl"; //../InputControl/InputControl
 import { auth } from "../../firebase";
 import styles from "../../css/Login.module.css";
 import { useHistory } from "react-router-dom";

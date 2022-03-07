@@ -7,6 +7,8 @@ import { auth } from "../../firebase";
 import { connect } from "react-redux";
 
 function Navbar(props) {
+
+  console.log(props.user?.photoURL)
   const Logout = () => {
     console.log(props.user.getIdToken());
 
@@ -25,8 +27,7 @@ function Navbar(props) {
       <body id="body-pd">
         <header class="header" id="header">
           <div class="header_toggle">
-            {" "}
-            <i class="bx bx-menu" id="header-toggle"></i>{" "}
+            <i class="bx bx-menu" id="header-toggle"></i>
           </div>
           <h3>UNISOME</h3>
 
@@ -43,7 +44,7 @@ function Navbar(props) {
             ) : (
               <div className="d-flex flex-row">
                 <div className="header_img p-2">
-                  <img src="https://i.imgur.com/hczKIze.jpg" alt="" />{" "}
+                  <img src={props.user.photoURL} alt="" />{" "}
                 </div>
                 <span className="p-2">{props.user.email}</span>
               </div>
@@ -54,14 +55,18 @@ function Navbar(props) {
       <div class="l-navbar" id="nav-bar">
         <nav class="nav">
           <div>
-            <a href="#" class="nav_logo">
+            <Link to="/" class="nav_logo">
               <i class="bx bx-layer nav_logo-icon"></i>
               <span class="nav_logo-name">UNISOME</span>
-            </a>
+            </Link>
             <div class="nav_list">
               <Link to="/" class="nav_link active">
                 <i class="bx bx-grid-alt nav_icon"></i>
                 <span class="nav_name">Home</span>
+              </Link>
+              <Link to="/postadd" class="nav_link">
+              <i class='bx bxs-add-to-queue nav_icon'></i>
+                <span class="nav_name">Post Add</span>
               </Link>
               <Link to={`/profile/${props?.user?.uid}`} class="nav_link">
                 <i class="bx bx-user nav_icon"></i>
@@ -70,10 +75,6 @@ function Navbar(props) {
               <Link to="/chats" class="nav_link">
                 <i class="bx bx-message-square-detail nav_icon"></i>
                 <span class="nav_name">My Groups</span>
-              </Link>
-              <Link class="nav_link">
-                <i class="bx bx-bookmark nav_icon"></i>
-                <span class="nav_name">Bookmark</span>
               </Link>
               <Link class="nav_link">
                 <i class="bx bx-folder nav_icon"></i>
@@ -86,10 +87,17 @@ function Navbar(props) {
             </div>
           </div>
           {props.user !== null ? (
+            <div>
+            <Link to="/settings" class="nav_link">
+            <i class='bx bx-cog nav_icon'></i>
+            <span class="nav_name">Settings</span>
+          </Link>
+
             <Link to="/" class="nav_link" onClick={Logout}>
               <i class="bx bx-log-out nav_icon"></i>
               <span class="nav_name">SignOut</span>
             </Link>
+            </div>
           ) : null}
         </nav>
       </div>

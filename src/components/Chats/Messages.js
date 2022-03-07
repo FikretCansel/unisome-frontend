@@ -5,7 +5,7 @@ import { db } from "../../firebase";
 import firebase from "firebase";
 import axios from "axios";
 
-export default function Messages() {
+export default function Messages({ user }) {
   const [input, setInput] = useState("");
   const [seed, setSeed] = useState("");
   const { roomId } = useParams();
@@ -13,6 +13,8 @@ export default function Messages() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
+
+    setSeed(Math.floor(Math.random() * 5000));
     if (roomId) {
       db.collection("matchGroups")
         .doc(roomId)
@@ -34,31 +36,51 @@ export default function Messages() {
     }
   }, [roomId]);
 
-  useEffect(() => {
-    setSeed(Math.floor(Math.random() * 5000));
-  }, [roomId]);
+
+
+  const getAreaOfInterestRooms=(roomId)=>{
+    db.collection("basicGroups")
+    .doc(roomId)
+    .onSnapshot((snapshot) => {
+      setRoomName(snapshot.data().name);
+    });
+
+    db.collection("basicGroups")
+    .doc(roomId)
+    .collection("chats")
+    .onSnapshot((snapshot) => {
+      setMessages(
+        snapshot.docs.map((doc) => {
+          return doc.data();
+        })
+      );
+    });
+
+
+  }
 
   const sendMessage = (e) => {
     e.preventDefault();
 
     console.log(roomId);
 
-    axios
-      .post(
-        "http://localhost:5000/unisomea/us-central1/app/api/matchGroups/sendMessageAGroup/" +
-          roomId,
-        {
-          message: input,
-          userId: 1,
-          userName: "fikret",
-          sentDate: firebase.firestore.FieldValue.serverTimestamp(),
-        }
-      )
-      .then((result) => setInput(""))
-      .catch((result) => {
-        console.log("Messaj gönderilemedi" + result);
-      });
-
+    if (input !== "" && input !== undefined && input !== null) {
+      axios
+        .post(
+          "http://localhost:5000/unisomea/us-central1/app/api/matchGroups/sendMessageAGroup/" +
+            roomId,
+          {
+            message: input,
+            userId: user.uid,
+            userName: user.displayName,
+            sentDate: firebase.firestore.FieldValue.serverTimestamp(),
+          }
+        )
+        .then((result) => setInput(""))
+        .catch((result) => {
+          console.log("Messaj gönderilemedi" + result);
+        });
+    }
     setInput("");
   };
 
@@ -75,7 +97,7 @@ export default function Messages() {
             <strong>{roomName}</strong>
             <div class="text-muted small">
               <em>
-                Last seen{" "}
+                Last seen
                 {new Date(
                   messages[messages.length - 1]?.timestamp?.toDate()
                 ).toUTCString()}
@@ -84,30 +106,29 @@ export default function Messages() {
           </div>
         </div>
       </div>
-      <div style={{overflow:"auto",overflowX:"hidden",height:"500px"}}>
-
-      {/* {width: "300px;", overflow: "auto;", overflow-x: "hidden;" ,height: "100px;"} */}
-      {messages.map((message) => (
-        <div class="position-relative">
-          <div class="p-4">
-            <div
-              className={`pb-4 chat-message-${
-                message.userName === "fikret" ? "right" : "left"
-              }`}
-            >
-              <div>
-                <div class="text-muted small text-nowrap mt-2">
-                  {new Date(message.sentDate?.toDate()).toUTCString()}
+      <div style={{ overflow: "auto", overflowX: "hidden", height: "500px" }}>
+        {/* {width: "300px;", overflow: "auto;", overflow-x: "hidden;" ,height: "100px;"} */}
+        {messages.map((message) => (
+          <div class="position-relative">
+            <div class="p-4">
+              <div
+                className={`pb-4 chat-message-${
+                  message.userName === user?.displayName ? "right" : "left"
+                }`}
+              >
+                <div>
+                  <div class="text-muted small text-nowrap mt-2">
+                    {new Date(message.sentDate?.toDate()).toUTCString()}
+                  </div>
                 </div>
-              </div>
-              <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                <div class="font-weight-bold mb-1">{message.userName}</div>
-                {message.message}
+                <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                  <div class="font-weight-bold mb-1">{message.userName}</div>
+                  {message.message}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
       </div>
 
       <div class="flex-grow-0 py-3 px-4 border-top">
