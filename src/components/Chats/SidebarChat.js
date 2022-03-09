@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "@material-ui/core";
-import { db } from "../../firebase";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
-function SidebarChat({ id, name }) {
+function SidebarChat({ id, name,routeUrl }) {
   const [seed, setSeed] = useState("");
 
-  useEffect(() => {
-    if (id) {
-      
-    }
-  }, [id]);
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
@@ -20,7 +13,7 @@ function SidebarChat({ id, name }) {
 
   return (
       <Link
-        to={`/chats/rooms/${id}`}
+        to={routeUrl}
         key={id}
         class="list-group-item list-group-item-action border-0"
       >
@@ -30,7 +23,7 @@ function SidebarChat({ id, name }) {
           <div class="flex-grow-1 ml-3">
             <p>{name}</p>
             <div class="small">
-              <span class="fas fa-circle chat-online"></span>{" "}
+              <span class="fas fa-circle chat-online"></span>
             
             </div>
           </div>

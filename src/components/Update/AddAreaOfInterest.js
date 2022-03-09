@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { db } from "../../firebase";
 
@@ -18,7 +17,6 @@ export default function AddAreaOfInterest({ user }) {
 
     setProductList([...productsList]);
 
-    console.log(productsList);
   };
 
   const handleSave = async (e) => {
@@ -26,7 +24,7 @@ export default function AddAreaOfInterest({ user }) {
 
     let saveData = [];
     await productsList.map((p) => {
-      if (p.isChecked == true) {
+      if (p.isChecked === true) {
         saveData.push({ aiId: p.aiId, aiName: p.aiName });
       }
     });
@@ -41,14 +39,12 @@ export default function AddAreaOfInterest({ user }) {
           }
           AddAreaOfInterest(doc.id, saveData);
 
-          console.log(doc.id, " => ", doc.data());
         });
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
 
-    console.log(saveData);
   };
 
   const deleteAreasOfInterest = async (docId) => {
@@ -67,13 +63,12 @@ export default function AddAreaOfInterest({ user }) {
 
   const AddAreaOfInterest = (docId, data) => {
 
-    console.log(data)
     data.forEach(element => {
       db.collection("profiles")
       .doc(docId)
       .collection("AreasOfInterest")
       .add(element)
-      .then((result) => console.log(result + "Başarılı"))
+      .then((result) => {})
       .catch((err) => console.log(err));
     });
   };

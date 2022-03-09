@@ -1,22 +1,21 @@
 import React, { useState } from "react";
-import { Button, Checkbox } from "@material-ui/core";
-import { storage, db } from "../../firebase";
-import firebase from "firebase";
+import { Button } from "@material-ui/core";
+import { db, storage } from "../../firebase";
 import "./ImageUpload.css";
 import { connect } from "react-redux";
-import axios from "axios";
+import firebase from "firebase";
 
 function ImageUpload(props) {
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
-  const [eventImage, seteventImage] = useState(true);
+  // const [eventImage, seteventImage] = useState(true);
 
-  const clickedImage = () => {
-    seteventImage(true);
-  };
-  const clickedVideo = () => {
-    seteventImage(false);
-  };
+  // const clickedImage = () => {
+  //   seteventImage(true);
+  // };
+  // const clickedVideo = () => {
+  //   seteventImage(false);
+  // };
 
   const handleChange = (e) => {
     if (e.target.files[0]) {
@@ -46,7 +45,7 @@ function ImageUpload(props) {
           .child(image.name)
           .getDownloadURL()
           .then((url) => {
-            sendToPost(url,props.text);
+            sendToPost(url, props.text);
           });
         setProgress(0);
         setImage(null);
@@ -54,46 +53,41 @@ function ImageUpload(props) {
     );
   };
 
-
-  const sendToPost=async (imageUrl,textdata)=>{
+  const sendToPost = async (imageUrl, textdata) => {
     const uid = await props.user.uid;
-    console.log(textdata)
-    console.log(uid);
-            axios.post(
-              "http://localhost:5000/unisomea/us-central1/app/api/posts/add",
-              {
-                user:{
-                  userId: uid,
-                  userName:props.user.displayName,
-                  photoURL:props.user.photoURL
-                },
-                imageUrl:imageUrl,
-                text: textdata,
-                areaOfInterest: {
-                    id:"1",
-                    name:"Türkçe"
-                },
-              }
-            );
-  }
 
+    db.collection("posts").add({
+      user: {
+        userId: uid,
+        userName: props.user.displayName,
+        photoURL: props.user.photoURL,
+      },
+      imageUrl: imageUrl,
+      text: textdata,
+      areaOfInterest: {
+        id: "1",
+        name: "Türkçe",
+      },
+      sentDate: firebase.firestore.FieldValue.serverTimestamp(),
+    }).then((result)=>{}).catch(err=>console.log(err));
+  };
 
   return (
     <div className="imageupload">
       <progress className="imageupload__progress" value={progress} max="100" />
       <div className="checkboxs">
-        <Checkbox
+        {/* <Checkbox
           value={eventImage}
           onClick={clickedImage}
           checked={eventImage}
         >
           Image
         </Checkbox>
-        <label>Image</label>
-        <Checkbox onClick={clickedVideo} checked={!eventImage}>
+        <label>Image</label> */}
+        {/* <Checkbox onClick={clickedVideo} checked={!eventImage}>
           Video
         </Checkbox>
-        <label>Video</label>
+        <label>Video</label> */}
       </div>
       <input type="file" onChange={handleChange} />
       <Button onClick={handleUpload}>Upload</Button>
@@ -102,9 +96,8 @@ function ImageUpload(props) {
 }
 
 function mapStateToProps(state) {
-    return {
-      user: state.userReducer,
-    };
-  }
-  export default connect(mapStateToProps)(ImageUpload);
-  
+  return {
+    user: state.userReducer,
+  };
+}
+export default connect(mapStateToProps)(ImageUpload);

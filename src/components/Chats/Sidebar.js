@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Chat.css";
-// import {Avatar, IconButton} from "@material-ui/core";
-// import DonutLargeIcon from "@material-ui/icons/DonutLarge";
-// import ChatIcon from "@material-ui/icons/Chat";
-// import MoreVertIcon from "@material-ui/icons/MoreVert";
-// import {SearchOutlined} from "@material-ui/icons";
-// import SidebarChat from "./SidebarChat";
-// import {db} from '../../firebase';
-import { Link } from "react-router-dom";
-import axios from "axios";
 import { db } from "../../firebase";
 import SidebarChat from "./SidebarChat";
 
@@ -18,13 +9,16 @@ function Sidebar() {
 
 
   useEffect(() => {
-    axios
-      .get(
-        "http://localhost:5000/unisomea/us-central1/app/api/matchGroups/getAll"
-      )
+   
+
+      db.collectionGroup("matchGroups").get()
       .then((result) => {
-        console.log(result.data);
-        setMatchRooms(result.data);
+        
+
+        setMatchRooms(result.docs.map((doc) => {
+          return {id:doc.id,...doc.data()};
+        }))
+        // setBasicRooms(result.data);
       })
       .catch(() => {});
 
@@ -60,11 +54,11 @@ function Sidebar() {
       </div>
       Matches Rooms
       {matchRooms.map((room) => (
-        <SidebarChat key={room.id} id={room.id} name={room.name} />
+        <SidebarChat key={room.id} id={room.id} name={room.name} routeUrl={`/chats/rooms/${room.id}`}/>
       ))}
       Basic Rooms
       {basicRooms.map((room) => (
-        <SidebarChat key={room.id} id={room.id} name={room.name} />
+        <SidebarChat key={room.id} id={room.id} name={room.name} routeUrl={`/chats/rooms/basicGroups/${room.id}`} />
       ))}
 
     </div>

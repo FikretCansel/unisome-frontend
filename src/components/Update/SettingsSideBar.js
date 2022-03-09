@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   useParams,
@@ -11,21 +11,17 @@ function SettingsSideBar({user}) {
   const changePassword="change-password";
   const areaOfInterest="set-area-of-interest";
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
-
   return (
     <div className="col-lg-4 pb-5">
       <div className="author-card pb-3">
         <div className="author-card-cover">
-          <a
+          <Link
             class="btn btn-style-1 btn-white btn-sm"
             data-toggle="tooltip"
             title=""
             data-original-title="You currently have 290 Reward points to spend"
           >
-          </a>
+          </Link>
         </div>
         <div className="author-card-profile">
           <div className="author-card-avatar">

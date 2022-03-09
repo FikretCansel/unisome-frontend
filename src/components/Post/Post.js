@@ -6,10 +6,13 @@ import "./Post.css"
 import { Link } from "react-router-dom";
 
 function Product(props) {
-  useEffect(() => {}, [props.post]);
+  useEffect(() => {
+    console.log(props.post)
+
+  }, [props.post]);
 
   const getDate=()=>{
-    return new Date(props.post?.sentDate?._seconds*1000).toDateString()
+    return new Date(props.post?.sentDate?.seconds*1000).toDateString();
   }
 
   return (
@@ -42,17 +45,16 @@ function Product(props) {
                   alt=""
                 />
             </div>
-            <div class="card-footer">
-              <a href="javascript:void(0)" class="d-inline-block text-muted">
+            <div className="card-footer">
+              <Link class="d-inline-block text-muted">
                 <strong>123</strong> <small>Likes</small>
-              </a>
-              <a
-                href="javascript:void(0)"
+              </Link>
+              <Link
                 class="d-inline-block text-muted ml-3"
               >
                 <strong>12</strong>
                 <small> Comments</small>
-              </a>
+              </Link>
               <Link
                 to={`posts/category/${props.post.areaOfInterest.name}`}
                 class="d-inline-block text-muted ml-3"

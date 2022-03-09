@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { db } from "../../firebase";
 
@@ -124,7 +123,7 @@ export default function PersonalInfos({ user }) {
           </div>
         </div>
         <div class="col-md-6">
-          <img src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
+          <img src={`https://avatars.dicebear.com/api/human/${seed}.svg`} alt="Resim yok" />
         </div>
 
         <div class="col-12">

@@ -1,60 +1,50 @@
 import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
 import { useHistory } from "react-router-dom";
-import { Col } from "reactstrap";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
 import PersonelInfos from "./PersonelInfos";
 import AreasOfInterest from "./AreasOfInterest";
-
-const useStyles = makeStyles((theme) => ({
-  profileAvatar: {
-    width: theme.spacing(18),
-    height: theme.spacing(18),
-    marginTop: "120px",
-  },
-}));
+import { Link } from "react-router-dom";
+import { db } from "../../firebase";
 
 export default function UserProfile() {
   const [profileData, setProfileData] = useState({});
   const [areasOfInterest, setAreasOfInterest] = useState([]);
 
-  // const [areaOfInterest, setProfileData] = useState([]);
-  const user = useSelector((state) => state.userReducer);
-  const classes = useStyles();
   let { userId } = useParams();
   const history = useHistory();
 
   useEffect(() => {
-    
-
-
     if (userId) {
-      axios
-        .get(
-          "http://localhost:5000/unisomea/us-central1/app/api/profiles/" +
-            userId
-        )
+      db.collection("profiles")
+        .where("userId", "==", userId)
+        .get()
         .then((result) => {
-          if (result.data[0]) {
-            setProfileData(result.data[0]);
+          if (result.docs[0]) {
+            let docId = result.docs[0].id;
 
-            axios
-              .get(
-                "http://localhost:5000/unisomea/us-central1/app/api/profiles/getAreasOfInterestsByDocId/" +
-                  result.data[0].id
-              )
+            setProfileData({ id: result.docs[0].id, ...result.docs[0].data() });
+
+            db.collection("profiles")
+              .doc(docId)
+              .collection("AreasOfInterest")
+              .get()
               .then((result) => {
-              
-                  setAreasOfInterest(result.data);
-                
+
+                setAreasOfInterest(
+                  result.docs.map((doc) => {
+                    return {id:doc.id,...doc.data()}
+                  })
+                );
+              })
+              .catch((err) => {
+                console.log(err);
               });
-          }else{
-            history.push('/profile/not-found');
+          } else {
+            history.push("/profile/not-found");
           }
-        });
+        })
+        .catch(() => {});
     }
   }, [userId]);
 
@@ -62,7 +52,7 @@ export default function UserProfile() {
     <div style={{ marginTop: "175px" }}>
       <div class="container">
         <div
-          class="img"
+          className="img"
           style={{
             background:
               "linear-gradient(150deg, rgba(63, 174, 255, .3)15%, rgba(63, 174, 255, .3)70%, rgba(63, 174, 255, .3)94%), url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);",
@@ -70,33 +60,30 @@ export default function UserProfile() {
             backgroundImage: "cover;",
           }}
         ></div>
-        <div class="card social-prof">
-          <div class="card-body">
-            <div class="wrapper">
-              <img
-                src={profileData?.photoURL}
-                alt=""
-                class="user-profile"
-              />
+        <div className="card social-prof">
+          <div className="card-body">
+            <div className="wrapper">
+              <img src={profileData?.photoURL} alt="" class="user-profile" />
               <h3>{profileData?.userName}</h3>
-              <p>Web Developer</p>
+              {/* <p>Web Developer</p> */}
+              <p></p>
             </div>
 
-            <div class="row ">
-              <div class="col-lg-12">
-                <ul class=" nav nav-tabs justify-content-center s-nav d-flex flex-row">
+            <div className="row ">
+              <div className="col-lg-12">
+                <ul className=" nav nav-tabs justify-content-center s-nav d-flex flex-row">
                   <li>
-                    <a className="p-2 text-decoration-none active" href="#">
+                    <Link className="p-2 text-decoration-none active">
                       About Me
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a className="p-2 text-decoration-none">Posts</a>
+                    <Link className="p-2 text-decoration-none">Posts</Link>
                   </li>
                   <li>
-                    <a className="p-2 text-decoration-none" href="#">
+                    <Link className="p-2 text-decoration-none">
                       Area of Interest
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

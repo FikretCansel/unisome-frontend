@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import ImageUpload from "./ImageUpload";
 // import 'bootstrap-select/dist/css/bootstrap-select.min.css';
 // import 'bootstrap-select/dist/js/bootstrap-select.min.js';
@@ -8,28 +8,28 @@ import ImageUpload from "./ImageUpload";
 function PostAdd(props) {
   const [text, setText] = useState("");
 
-  const postAdd = async (e) => {
-    e.preventDefault();
-  };
+  // const postAdd = async (e) => {
+  //   e.preventDefault();
+  // };
 
   return (
     <div>
       <form>
         <div
-          class="container posts-content col-lg-6"
+          className="container posts-content col-lg-6"
           style={{ marginTop: "80px" }}
         >
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="media mb-3">
+          <div className="card mb-4">
+            <div className="card-body">
+              <div className="media mb-3">
                 <img
                   src={props.user?.photoURL}
                   class="d-block ui-w-40 rounded-circle"
                   alt=""
                 />
-                <div class="media-body ml-3">
+                <div className="media-body ml-3">
                 {props.user?.displayName}
-                  <div class="text-muted small">{new Date().toDateString()}</div>
+                  <div className="text-muted small">{new Date().toDateString()}</div>
                 </div>
               </div>
 
@@ -42,13 +42,7 @@ function PostAdd(props) {
                   placeholder="Description"
                 />{" "}
               </p>
-              <img
-                // style={{maxHeight:"400px",}}
-                className="col-lg-12"
-                src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg"
-                alt=""
-              />
-              <select class="selectpicker" data-live-search="true">
+              {/* <select class="selectpicker" data-live-search="true">
                 <option data-tokens="ketchup mustard">
                   Futbol
                 </option>
@@ -56,28 +50,28 @@ function PostAdd(props) {
                 <option data-tokens="frosting">
                   Matematik
                 </option>
-              </select>
+              </select> */}
 
               <ImageUpload text={text} />
             </div>
 
-            <div class="card-footer">
-              <a href="javascript:void(0)" class="d-inline-block text-muted">
+            <div className="card-footer">
+              <Link className="d-inline-block text-muted">
                 <strong>0</strong> <small>Likes</small>
-              </a>
-              <a
-                href="javascript:void(0)"
+              </Link>
+              <Link
+                
                 class="d-inline-block text-muted ml-3"
               >
                 <strong>0</strong>
                 <small> Comments</small>
-              </a>
-              <a
-                href="javascript:void(0)"
-                class="d-inline-block text-muted ml-3"
+              </Link>
+              <Link
+               
+                className="d-inline-block text-muted ml-3"
               >
-                <small class="align-middle">Repost</small>
-              </a>
+                <small className="align-middle">Repost</small>
+              </Link>
             </div>
           </div>
         </div>

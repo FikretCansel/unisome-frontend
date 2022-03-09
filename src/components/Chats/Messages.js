@@ -3,85 +3,63 @@ import { Avatar } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import firebase from "firebase";
-import axios from "axios";
 
-export default function Messages({ user }) {
+export default function Messages({ user, groupName }) {
   const [input, setInput] = useState("");
   const [seed, setSeed] = useState("");
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+  const [dateIsOpen, setDateIsOpen] = useState(false);
 
   useEffect(() => {
-
     setSeed(Math.floor(Math.random() * 5000));
     if (roomId) {
-      db.collection("matchGroups")
+      db.collection(groupName)
         .doc(roomId)
         .onSnapshot((snapshot) => {
-          setRoomName(snapshot.data().name);
+          setRoomName(snapshot.data()?.name);
         });
       console.log(roomId);
 
-      db.collection("matchGroups")
+      db.collection(groupName)
         .doc(roomId)
         .collection("chats")
+        .orderBy("sentDate")
         .onSnapshot((snapshot) => {
           setMessages(
             snapshot.docs.map((doc) => {
-              return doc.data();
+              return {id:doc.id,...doc.data()};
             })
           );
         });
     }
-  }, [roomId]);
-
-
-
-  const getAreaOfInterestRooms=(roomId)=>{
-    db.collection("basicGroups")
-    .doc(roomId)
-    .onSnapshot((snapshot) => {
-      setRoomName(snapshot.data().name);
-    });
-
-    db.collection("basicGroups")
-    .doc(roomId)
-    .collection("chats")
-    .onSnapshot((snapshot) => {
-      setMessages(
-        snapshot.docs.map((doc) => {
-          return doc.data();
-        })
-      );
-    });
-
-
-  }
+  }, [roomId,groupName]);
 
   const sendMessage = (e) => {
     e.preventDefault();
 
-    console.log(roomId);
 
     if (input !== "" && input !== undefined && input !== null) {
-      axios
-        .post(
-          "http://localhost:5000/unisomea/us-central1/app/api/matchGroups/sendMessageAGroup/" +
-            roomId,
-          {
-            message: input,
-            userId: user.uid,
-            userName: user.displayName,
-            sentDate: firebase.firestore.FieldValue.serverTimestamp(),
-          }
-        )
+      db.collection(groupName)
+        .doc(roomId)
+        .collection("chats")
+        .add({
+          message: input,
+          userId: user.uid,
+          userName: user.displayName,
+          sentDate: firebase.firestore.FieldValue.serverTimestamp(),
+        })
         .then((result) => setInput(""))
         .catch((result) => {
           console.log("Messaj gönderilemedi" + result);
         });
     }
     setInput("");
+  };
+
+  const handleDataIsOpen = () => {
+    setDateIsOpen(!dateIsOpen);
   };
 
   return (
@@ -109,22 +87,27 @@ export default function Messages({ user }) {
       <div style={{ overflow: "auto", overflowX: "hidden", height: "500px" }}>
         {/* {width: "300px;", overflow: "auto;", overflow-x: "hidden;" ,height: "100px;"} */}
         {messages.map((message) => (
-          <div class="position-relative">
+          <div key={message.id} class="position-relative" onClick={() => handleDataIsOpen()}>
             <div class="p-4">
               <div
                 className={`pb-4 chat-message-${
                   message.userName === user?.displayName ? "right" : "left"
                 }`}
               >
-                <div>
-                  <div class="text-muted small text-nowrap mt-2">
-                    {new Date(message.sentDate?.toDate()).toUTCString()}
+                {!dateIsOpen ? (
+                  <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                    <div class="font-weight-bold mb-1">{message.userName}</div>
+                    {message.message}
                   </div>
-                </div>
-                <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                  <div class="font-weight-bold mb-1">{message.userName}</div>
-                  {message.message}
-                </div>
+                ) : (
+                  <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                    <div class="font-weight-bold mb-1">{message.message}</div>
+                    <div class="text-muted small text-nowrap mt-2">
+                      
+                      {new Date(message.sentDate?.toDate()).toUTCString()}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

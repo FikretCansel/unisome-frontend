@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PersonalInfos from "./PersonalInfos";
 import SettingsSideBar from "./SettingsSideBar";
 import "./UpdateDashBoard.css";
@@ -7,7 +7,6 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  useParams,
 } from "react-router-dom";
 import AddAreaOfInterest from "./AddAreaOfInterest";
 import { connect } from "react-redux";
@@ -15,10 +14,6 @@ import { connect } from "react-redux";
 function UpdateDashBoard(props) {
 
   
-
-  useEffect(() => {
-    console.log(props.user);
-  }, []);
 
   return (
     <div class="container" style={{ marginTop: "150px" }}>

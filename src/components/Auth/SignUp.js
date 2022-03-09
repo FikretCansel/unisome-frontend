@@ -78,6 +78,7 @@ function Login() {
           }}
         />
         <InputControl
+          type="password"
           label="Password"
           placeholder="Enter password"
           onChange={(e) => {

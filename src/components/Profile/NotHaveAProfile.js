@@ -12,7 +12,7 @@ export default function NotHaveAProfile() {
              <h3>Opsss.Profile Not Found</h3>
             </div>
           </div>
-          <img src={screamPng} className="col-md-8" alt="image Error" />
+          <img src={screamPng} className="col-md-8" alt="Error" />
           <div className="row justify-content-center mt-5">
             <div className="col-md-8">
               <Link to="/settings/personal-infos" className="btn btn-primary btn-lg">

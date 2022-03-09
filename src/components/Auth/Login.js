@@ -46,6 +46,7 @@ function Login() {
           placeholder="Enter email address"
         />
         <InputControl
+        type="password"
           label="Password"
           onChange={(e) => {
             setPassword(e.target.value);

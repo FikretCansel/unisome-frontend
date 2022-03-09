@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.315ac5f0.chunk.css",
+    "main.js": "/static/js/main.b4f5c6f4.chunk.js",
+    "main.js.map": "/static/js/main.b4f5c6f4.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.11f320ca.js",
+    "runtime-main.js.map": "/static/js/runtime-main.11f320ca.js.map",
+    "static/css/2.ffc87d2f.chunk.css": "/static/css/2.ffc87d2f.chunk.css",
+    "static/js/2.e757f6bb.chunk.js": "/static/js/2.e757f6bb.chunk.js",
+    "static/js/2.e757f6bb.chunk.js.map": "/static/js/2.e757f6bb.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.ffc87d2f.chunk.css.map": "/static/css/2.ffc87d2f.chunk.css.map",
+    "static/css/main.315ac5f0.chunk.css.map": "/static/css/main.315ac5f0.chunk.css.map",
+    "static/js/2.e757f6bb.chunk.js.LICENSE.txt": "/static/js/2.e757f6bb.chunk.js.LICENSE.txt",
+    "static/media/boxicons.min.css": "/static/media/boxicons.dfc882ec.eot",
+    "static/media/scream.22719dee.png": "/static/media/scream.22719dee.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.11f320ca.js",
+    "static/css/2.ffc87d2f.chunk.css",
+    "static/js/2.e757f6bb.chunk.js",
+    "static/css/main.315ac5f0.chunk.css",
+    "static/js/main.b4f5c6f4.chunk.js"
+  ]
+}

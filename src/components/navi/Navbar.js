@@ -44,7 +44,7 @@ function Navbar(props) {
             ) : (
               <div className="d-flex flex-row">
                 <div className="header_img p-2">
-                  <img src={props.user.photoURL} alt="" />{" "}
+                  <img src={props.user.photoURL} alt="" />
                 </div>
                 <span className="p-2">{props.user.email}</span>
               </div>
@@ -76,13 +76,9 @@ function Navbar(props) {
                 <i class="bx bx-message-square-detail nav_icon"></i>
                 <span class="nav_name">My Groups</span>
               </Link>
-              <Link class="nav_link">
-                <i class="bx bx-folder nav_icon"></i>
-                <span class="nav_name">Files</span>
-              </Link>
-              <Link class="nav_link">
+              <Link to="agenda" className="nav_link">
                 <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-                <span class="nav_name">Stats</span>
+                <span class="nav_name">Agenda</span>
               </Link>
             </div>
           </div>

@@ -1,0 +1,7 @@
+.posts{
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: bisque;
+    display: flex;
+    justify-content: space-between;
+}

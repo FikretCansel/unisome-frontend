@@ -20,8 +20,11 @@ function Chat(props) {
             <div class="row g-0">
               <Router>
                 <Sidebar user={props.user}/>
-                <Route path="/chats/rooms/:roomId">
-                  <Messages user={props.user}/>
+                <Route path="/chats/rooms/:roomId" exact>
+                  <Messages user={props.user} groupName="matchGroups"/>
+                </Route>
+                <Route path="/chats/rooms/basicGroups/:roomId">
+                  <Messages user={props.user} groupName="basicGroups"/>
                 </Route>
               </Router>
             </div>
