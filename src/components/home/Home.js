@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Post from "../Post/Post";
 import "./Home.css"
 import { db } from "../../firebase";
-function Home() {
+function Home({user}) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,6 @@ function Home() {
       );
     });
 
-    console.log(posts)
 
   }, []);
 
@@ -33,7 +32,7 @@ function Home() {
 
         <div className="posts">
           {posts.map((post) => (
-            <Post key={post.id} post={post}/>
+            <Post key={post.id} post={post} user={user}/>
           ))}
         </div>
       </div>

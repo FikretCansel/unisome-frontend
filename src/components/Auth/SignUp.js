@@ -60,7 +60,7 @@ function Login() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.innerBox}>
+      <div className={styles.innerBox+ " col-6"}>
         <h1 className={styles.heading}>Signup</h1>
 
         <InputControl

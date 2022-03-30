@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Button } from "@material-ui/core";
-import { db, storage } from "../../firebase";
+import {storage } from "../../firebase";
 import "./ImageUpload.css";
 import { connect } from "react-redux";
-import firebase from "firebase";
 
 function ImageUpload(props) {
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
+  const maxImageSize=3;
+  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
   // const [eventImage, seteventImage] = useState(true);
 
   // const clickedImage = () => {
@@ -23,54 +23,52 @@ function ImageUpload(props) {
     }
   };
   const handleUpload = () => {
-    const uploadTash = storage.ref(`images/${image.name}`).put(image);
-    uploadTash.on(
-      "state_changed",
-      (snaphot) => {
-        //progress function...
-        const progress = Math.round(
-          (snaphot.bytesTransferred / snaphot.totalBytes) * 100
+    if (image !== null) {
+      if (image.type === "image/jpeg" || image.type === "image/png") {
+        if(image.size<=maxImageSize*1000225){
+          setSubmitButtonDisabled(true);
+
+        const uploadTash = storage.ref(`images/${image.name}`).put(image);
+        uploadTash.on(
+          "state_changed",
+          (snaphot) => {
+            //progress function...
+            const progress = Math.round(
+              (snaphot.bytesTransferred / snaphot.totalBytes) * 100
+            );
+            console.log(progress)
+            props.setResullt(progress+"Loading...")
+            setProgress(progress);
+          },
+          (error) => {
+            //Error function
+            console.log(error);
+            alert(error.message);
+          },
+          () => {
+            //complete function ...
+            storage
+              .ref("images")
+              .child(image.name)
+              .getDownloadURL()
+              .then((url) => {
+                props.sendToPost(url, props.text);
+              });
+            setProgress(100);
+            setImage(null);
+          }
         );
-        setProgress(progress);
-      },
-      (error) => {
-        //Error function
-        console.log(error);
-        alert(error.message);
-      },
-      () => {
-        //complete function ...
-        storage
-          .ref("images")
-          .child(image.name)
-          .getDownloadURL()
-          .then((url) => {
-            sendToPost(url, props.text);
-          });
-        setProgress(0);
-        setImage(null);
+        }else{
+          alert(`Image size must be less than ${maxImageSize} mb`);
+        }
+      }else{
+        alert("Image must be of png or jpg type");
       }
-    );
+    } else {
+      props.endToPost("", props.text);
+    }
   };
 
-  const sendToPost = async (imageUrl, textdata) => {
-    const uid = await props.user.uid;
-
-    db.collection("posts").add({
-      user: {
-        userId: uid,
-        userName: props.user.displayName,
-        photoURL: props.user.photoURL,
-      },
-      imageUrl: imageUrl,
-      text: textdata,
-      areaOfInterest: {
-        id: "1",
-        name: "Türkçe",
-      },
-      sentDate: firebase.firestore.FieldValue.serverTimestamp(),
-    }).then((result)=>{}).catch(err=>console.log(err));
-  };
 
   return (
     <div className="imageupload">
@@ -89,8 +87,9 @@ function ImageUpload(props) {
         </Checkbox>
         <label>Video</label> */}
       </div>
-      <input type="file" onChange={handleChange} />
-      <Button onClick={handleUpload}>Upload</Button>
+      <input className="image-input" type="file" onChange={handleChange} />
+      <button className="btn btn-style-1 btn-primary w-75 p-3" disabled={submitButtonDisabled} onClick={handleUpload}>Upload</button>
+      {props.result}
     </div>
   );
 }

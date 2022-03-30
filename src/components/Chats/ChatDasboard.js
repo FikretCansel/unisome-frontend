@@ -6,26 +6,30 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { connect } from "react-redux";
 
 
-
-
-
 function Chat(props) {
+  
   return (
     <div>
-      <main class="content">
-        <div class="container p-0">
-          <h1 class="h3 mb-3">Messages</h1>
+      <main className="content">
+        <div className="container p-0">
+          <h1 className="h3 mb-3">Messages</h1>
 
-          <div class="card">
-            <div class="row g-0">
+          <div className="card">
+            <div className="row g-0">
               <Router>
-                <Sidebar user={props.user}/>
+                <Sidebar user={props.user} profile={props.profile}/>
                 <Route path="/chats/rooms/:roomId" exact>
                   <Messages user={props.user} groupName="matchGroups"/>
                 </Route>
+                <Route path="/chats/rooms/generalGroups/:roomId">
+                  <Messages user={props.user} groupName="generalGroups"/>
+                </Route>
+                
                 <Route path="/chats/rooms/basicGroups/:roomId">
                   <Messages user={props.user} groupName="basicGroups"/>
                 </Route>
+
+                
               </Router>
             </div>
           </div>
@@ -37,7 +41,8 @@ function Chat(props) {
 
 function mapStateToProps(state) {
   return {
-    user: state.userReducer
+    user: state.userReducer,
+    profile:state.profileReducer
   };
 }
 export default connect(mapStateToProps)(Chat);

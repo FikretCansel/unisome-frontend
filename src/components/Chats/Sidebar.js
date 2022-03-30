@@ -3,64 +3,129 @@ import "./Chat.css";
 import { db } from "../../firebase";
 import SidebarChat from "./SidebarChat";
 
-function Sidebar() {
+function Sidebar({ profile }) {
   const [matchRooms, setMatchRooms] = useState([]);
   const [basicRooms, setBasicRooms] = useState([]);
-
+  const [generalRooms, setGeneralRooms] = useState([]);
+  const [areasOfInterest, setAreasOfIntest] = useState([]);
 
   useEffect(() => {
-   
+    db.collectionGroup("generalGroups").onSnapshot((snapshot) => {
+      console.log(snapshot.docs);
+      setGeneralRooms(
+        snapshot.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
+        })
+      );
+    });
 
-      db.collectionGroup("matchGroups").get()
-      .then((result) => {
-        
+    if (profile) {
+      db.collectionGroup("matchGroups")
+        .where("users", "array-contains", profile.userId)
+        .onSnapshot((snapshot) => {
+          console.log(snapshot.docs);
+          setMatchRooms(
+            snapshot.docs.map((doc) => {
+              return { id: doc.id, ...doc.data() };
+            })
+          );
+        });
 
-        setMatchRooms(result.docs.map((doc) => {
-          return {id:doc.id,...doc.data()};
-        }))
-        // setBasicRooms(result.data);
-      })
-      .catch(() => {});
+      db.collectionGroup("basicGroups")
+        .get()
+        .then((result) => {
+          setBasicRooms(
+            result.docs.map((doc) => {
+              return { id: doc.id, ...doc.data() };
+            })
+          );
+          // setBasicRooms(result.data);
+        })
+        .catch(() => {});
+    }
 
+    getAreasOfInterest();
+  }, [profile]);
 
-      db.collectionGroup("basicGroups").get()
-      .then((result) => {
-        
+  const getAreasOfInterest = () => {
+    if (profile) {
+      db.collection("profiles")
+        .doc(profile?.id)
+        .collection("AreasOfInterest")
+        .onSnapshot((snapshot) => {
+          setAreasOfIntest(
+            snapshot.docs.map((doc) => {
+              return { id: doc.id, ...doc.data() };
+            })
+          );
+        });
+    }
+  };
 
-        setBasicRooms(result.docs.map((doc) => {
-          return {id:doc.id,...doc.data()};
-        }))
-        // setBasicRooms(result.data);
-      })
-      .catch(() => {});
-
-
-
-
-  }, []);
+  const getIsSelectedRole = (roomId) => {
+    let isTrue = false;
+    areasOfInterest.forEach((a) => {
+      if (a.aiName === roomId) {
+        isTrue = true;
+        return true;
+      }
+    });
+    if (isTrue) {
+      return true;
+    }
+    return false;
+  };
 
   return (
-    <div class="col-12 col-lg-5 col-xl-3 border-right">
-      <div class="px-4 d-none d-md-block">
-        <div class="d-flex align-items-center">
-          <div class="flex-grow-1">
+    <div className="col-12 col-lg-5 col-xl-3 border-right">
+      <div className="px-4 d-none d-md-block">
+        <div className="d-flex align-items-center">
+          <div className="flex-grow-1">
             <input
               type="text"
-              class="form-control my-3"
+              className="form-control my-3"
               placeholder="Search..."
             />
           </div>
         </div>
       </div>
-      Matches Rooms
-      {matchRooms.map((room) => (
-        <SidebarChat key={room.id} id={room.id} name={room.name} routeUrl={`/chats/rooms/${room.id}`}/>
-      ))}
-      Basic Rooms
-      {basicRooms.map((room) => (
-        <SidebarChat key={room.id} id={room.id} name={room.name} routeUrl={`/chats/rooms/basicGroups/${room.id}`} />
-      ))}
+      {profile ? (
+        <div>
+          <p className="pl-4">General Groups</p>
 
+          {generalRooms.map((room) => (
+            <SidebarChat
+              key={room.id}
+              id={room.id}
+              name={room.name}
+              routeUrl={`/chats/rooms/generalGroups/${room.id}`}
+            />
+          ))}
+
+          <p className="pl-4">Matches Rooms</p>
+          {matchRooms.map((room) => (
+            <SidebarChat
+              key={room.id}
+              id={room.id}
+              name={room.name}
+              routeUrl={`/chats/rooms/${room.id}`}
+            />
+          ))}
+          <p className="pl-4">Basic Rooms</p>
+          {basicRooms.map((room) =>
+            getIsSelectedRole(room.name) === true ? (
+              <SidebarChat
+                key={room.id}
+                id={room.id}
+                name={room.name}
+                routeUrl={`/chats/rooms/basicGroups/${room.id}`}
+              />
+            ) : null
+          )}
+        </div>
+      ) : (
+        <p className="pl-4">Sign in for mores</p>
+      )}
     </div>
   );
 }

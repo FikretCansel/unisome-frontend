@@ -15,8 +15,8 @@ export default function NotHaveAProfile() {
           <img src={screamPng} className="col-md-8" alt="Error" />
           <div className="row justify-content-center mt-5">
             <div className="col-md-8">
-              <Link to="/settings/personal-infos" className="btn btn-primary btn-lg">
-                AAA hemen Oluştur
+              <Link to="/" className="btn btn-primary btn-lg">
+                Ana Sayfaya Dön
               </Link>
             </div>
           </div>

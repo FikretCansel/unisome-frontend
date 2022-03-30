@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { db } from "../../firebase";
 
 export default function AddAreaOfInterest({ user }) {
-  const [productsList, setProductList] = useState([
-    { aiId: "1", aiName: "Resim", isChecked: false },
-    { aiId: "2", aiName: "Müzik", isChecked: false },
-    { aiId: "3", aiName: "Sanat", isChecked: false },
-    { aiId: "4", aiName: "Ingilizce", isChecked: false },
-  ]);
+  const [productsList, setProductList] = useState([]);
+
+  useEffect(() => {
+    db.collectionGroup("basicGroups")
+      .get()
+      .then((result) => {
+        setProductList(
+          result.docs.map((doc) => {
+            return { id: doc.id, ...doc.data(),isChecked:false};
+          })
+          
+        );
+      })
+      .catch(() => {});
+
+  }, []);
 
   const onAddingItem = (i) => {
     const product = productsList[i];
@@ -16,18 +26,19 @@ export default function AddAreaOfInterest({ user }) {
     productsList[i] = product;
 
     setProductList([...productsList]);
-
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
 
     let saveData = [];
-    await productsList.map((p) => {
+    await productsList.forEach((p) => {
       if (p.isChecked === true) {
-        saveData.push({ aiId: p.aiId, aiName: p.aiName });
+        saveData.push({ aiId: p.id, aiName: p.name });
       }
     });
+
+    console.log(saveData)
 
     db.collection("profiles")
       .where("userId", "==", user.uid)
@@ -38,13 +49,11 @@ export default function AddAreaOfInterest({ user }) {
             await deleteAreasOfInterest(doc.id);
           }
           AddAreaOfInterest(doc.id, saveData);
-
         });
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
-
   };
 
   const deleteAreasOfInterest = async (docId) => {
@@ -62,29 +71,30 @@ export default function AddAreaOfInterest({ user }) {
   };
 
   const AddAreaOfInterest = (docId, data) => {
-
-    data.forEach(element => {
+    data.forEach((element) => {
       db.collection("profiles")
-      .doc(docId)
-      .collection("AreasOfInterest")
-      .add(element)
-      .then((result) => {})
-      .catch((err) => console.log(err));
+        .doc(docId)
+        .collection("AreasOfInterest")
+        .add(element)
+        .then((result) => {console.log("Kayıt Başarılı")})
+        .catch((err) => console.log(err));
     });
   };
 
   return (
     <div className="col-md-8">
+      
       <div className="row">
+
         {productsList.map((product, i) => {
           return (
-            <div className="col-md-5">
+            <div className="col-md-4">
               <input
                 type="checkbox"
                 className="btn-check"
                 name="options"
-                id={product.aiId}
-                value={product.aiName}
+                id={product.id}
+                value={product.name}
                 checked={product.isChecked}
                 onChange={() => onAddingItem(i)}
               />
@@ -92,9 +102,9 @@ export default function AddAreaOfInterest({ user }) {
                 className={`btn btn-${
                   product.isChecked === true ? "primary" : "secondary"
                 }`}
-                for={product.aiId}
+                for={product.id}
               >
-                {product.aiName}
+                {product.name}
               </label>
             </div>
           );

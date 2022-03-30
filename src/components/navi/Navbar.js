@@ -7,16 +7,13 @@ import { auth } from "../../firebase";
 import { connect } from "react-redux";
 
 function Navbar(props) {
-
-  console.log(props.user?.photoURL)
   const Logout = () => {
-    console.log(props.user.getIdToken());
 
     auth
       .signOut()
       .then(function () {
         // Sign-out successful.
-        props.actions.setUser(null);
+        
       })
       .catch(function (error) {
         // An error happened.
@@ -25,11 +22,11 @@ function Navbar(props) {
   return (
     <div>
       <body id="body-pd">
-        <header class="header" id="header">
-          <div class="header_toggle">
-            <i class="bx bx-menu" id="header-toggle"></i>
+        <header className="header" id="header">
+          <div className="header_toggle">
+            <i className="bx bx-menu" id="header-toggle"></i>
           </div>
-          <h3>UNISOME</h3>
+          <h3>UNISOMEA</h3>
 
           <div className="nav-right d-flex flex-row">
             {props.user === null ? (
@@ -52,47 +49,57 @@ function Navbar(props) {
           </div>
         </header>
       </body>
-      <div class="l-navbar" id="nav-bar">
-        <nav class="nav">
+      <div className="l-navbar" id="nav-bar">
+        <nav className="nav">
           <div>
-            <Link to="/" class="nav_logo">
-              <i class="bx bx-layer nav_logo-icon"></i>
-              <span class="nav_logo-name">UNISOME</span>
+            <Link to="/" className="nav_logo">
+              <i className="bx bx-layer nav_logo-icon"></i>
+              <span className="nav_logo-name">UNISOME</span>
             </Link>
-            <div class="nav_list">
-              <Link to="/" class="nav_link active">
-                <i class="bx bx-grid-alt nav_icon"></i>
-                <span class="nav_name">Home</span>
-              </Link>
-              <Link to="/postadd" class="nav_link">
-              <i class='bx bxs-add-to-queue nav_icon'></i>
-                <span class="nav_name">Post Add</span>
-              </Link>
-              <Link to={`/profile/${props?.user?.uid}`} class="nav_link">
-                <i class="bx bx-user nav_icon"></i>
-                <span class="nav_name">Profile</span>
-              </Link>
-              <Link to="/chats" class="nav_link">
-                <i class="bx bx-message-square-detail nav_icon"></i>
-                <span class="nav_name">My Groups</span>
+            <div className="nav_list">
+              <Link to="/" className="nav_link active">
+                <i className="bx bx-grid-alt nav_icon"></i>
+                <span className="nav_name">Home</span>
               </Link>
               <Link to="agenda" className="nav_link">
-                <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-                <span class="nav_name">Agenda</span>
+                <i className="bx bx-bar-chart-alt-2 nav_icon"></i>
+                <span className="nav_name">Agenda</span>
               </Link>
+              <Link to="/postadd" className="nav_link">
+                <i className="bx bxs-add-to-queue nav_icon"></i>
+                <span className="nav_name">Post Add</span>
+              </Link>
+              <Link to="/chats" className="nav_link">
+                <i className="bx bx-message-square-detail nav_icon"></i>
+                <span className="nav_name">My Groups</span>
+              </Link>
+              {
+                props.user?
+                <Link to={`/profile/${props?.user?.uid}`} className="nav_link">
+                <i className="bx bx-user nav_icon"></i>
+                <span className="nav_name">Profile</span>
+              </Link>:null
+              }
+              {
+                props.user?
+                <Link to="/match" className="nav_link">
+                <i class='bx bxs-comment-add'></i>
+                <span className="nav_name">Match</span>
+              </Link>:null
+              }
             </div>
           </div>
           {props.user !== null ? (
             <div>
-            <Link to="/settings" class="nav_link">
-            <i class='bx bx-cog nav_icon'></i>
-            <span class="nav_name">Settings</span>
-          </Link>
+              <Link to="/settings" className="nav_link">
+                <i className="bx bx-cog nav_icon"></i>
+                <span className="nav_name">Settings</span>
+              </Link>
 
-            <Link to="/" class="nav_link" onClick={Logout}>
-              <i class="bx bx-log-out nav_icon"></i>
-              <span class="nav_name">SignOut</span>
-            </Link>
+              <Link to="/" className="nav_link" onClick={Logout}>
+                <i className="bx bx-log-out nav_icon"></i>
+                <span className="nav_name">SignOut</span>
+              </Link>
             </div>
           ) : null}
         </nav>
@@ -103,8 +110,7 @@ function Navbar(props) {
 
 function mapStateToProps(state) {
   return {
-    user: state.userReducer,
-    cartLength: state.cartReducer.length,
+    user: state.userReducer
   };
 }
 export default connect(mapStateToProps)(Navbar);

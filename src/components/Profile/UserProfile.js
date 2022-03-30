@@ -6,6 +6,7 @@ import PersonelInfos from "./PersonelInfos";
 import AreasOfInterest from "./AreasOfInterest";
 import { Link } from "react-router-dom";
 import { db } from "../../firebase";
+import UserPosts from "./UserPosts";
 
 export default function UserProfile() {
   const [profileData, setProfileData] = useState({});
@@ -22,7 +23,6 @@ export default function UserProfile() {
         .then((result) => {
           if (result.docs[0]) {
             let docId = result.docs[0].id;
-
             setProfileData({ id: result.docs[0].id, ...result.docs[0].data() });
 
             db.collection("profiles")
@@ -46,16 +46,14 @@ export default function UserProfile() {
         })
         .catch(() => {});
     }
-  }, [userId]);
+  }, [userId,history]);
 
   return (
     <div style={{ marginTop: "175px" }}>
-      <div class="container">
+      <div className="container">
         <div
           className="img"
           style={{
-            background:
-              "linear-gradient(150deg, rgba(63, 174, 255, .3)15%, rgba(63, 174, 255, .3)70%, rgba(63, 174, 255, .3)94%), url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);",
             height: "350px;",
             backgroundImage: "cover;",
           }}
@@ -80,20 +78,15 @@ export default function UserProfile() {
                   <li>
                     <Link className="p-2 text-decoration-none">Posts</Link>
                   </li>
-                  <li>
-                    <Link className="p-2 text-decoration-none">
-                      Area of Interest
-                    </Link>
-                  </li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div className="row">
           <PersonelInfos profileData={profileData} />
-
           <AreasOfInterest areasOfInterest={areasOfInterest} />
+          <UserPosts id="posts" userId={userId}/>
         </div>
       </div>
     </div>

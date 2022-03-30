@@ -6,7 +6,7 @@ function Agenda() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    db.collection("posts")
+    db.collectionGroup("posts")
     .orderBy("sentDate", "desc")
     .onSnapshot((snapshot) => {
       setPosts(
