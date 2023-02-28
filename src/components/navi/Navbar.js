@@ -21,7 +21,7 @@ function Navbar(props) {
   };
   return (
     <div>
-      <body id="body-pd">
+      <div id="body-pd">
         <header className="header" id="header">
           <div className="header_toggle">
             <i className="bx bx-menu" id="header-toggle"></i>
@@ -48,7 +48,7 @@ function Navbar(props) {
             )}
           </div>
         </header>
-      </body>
+      </div>
       <div className="l-navbar" id="nav-bar">
         <nav className="nav">
           <div>

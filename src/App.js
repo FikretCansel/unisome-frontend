@@ -32,7 +32,9 @@ function App(props) {
           
           let profile={id:data.docs[0].id,...data.docs[0].data()};
           props.actions.setProfile(profile)
-        }).catch(err=>console.log(err));
+        }).catch(err=>{
+          
+        });
 
 
         setIsAuth(true);

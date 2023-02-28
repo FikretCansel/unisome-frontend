@@ -3,3 +3,9 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
+
+const authObjectMock = {
+    signInWithEmailAndPassword:jest.fn((email,password) => {return Promise.resolve(true)}),
+  };
+  
+  export { authObjectMock };

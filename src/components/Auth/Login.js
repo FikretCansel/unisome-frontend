@@ -9,8 +9,8 @@ function Login() {
     const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [errorMsg, setErrorMsg] = useState("");
+  console.log(auth);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 
   const handleSubmission = () => {
@@ -55,8 +55,8 @@ function Login() {
         />
 
         <div className={styles.footer}>
-          <b className={styles.error}>{errorMsg}</b>
-          <button disabled={submitButtonDisabled} onClick={handleSubmission}>
+          <b className={styles.error} data-testid="error-message" style={{ visibility: errorMsg ? "visible" : "hidden" }}>{errorMsg}</b>
+          <button disabled={submitButtonDisabled}  onClick={handleSubmission} data-testid="login-button">
             Login
           </button>
           <p>
